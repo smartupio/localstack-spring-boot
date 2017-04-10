@@ -1,11 +1,11 @@
-package io.smartup.localstack;
+package io.smartup.cloud.localstack;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
-import io.smartup.docker.DockerService;
-import io.smartup.utils.FileBasedCounter;
-import io.smartup.utils.FileBasedMutex;
+import io.smartup.cloud.docker.DockerService;
+import io.smartup.cloud.utils.FileBasedCounter;
+import io.smartup.cloud.utils.FileBasedMutex;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

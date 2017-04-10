@@ -1,4 +1,4 @@
-package io.smartup.utils;
+package io.smartup.cloud.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class FileBasedMutex {
                 fileLock = fileChannel.lock();
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during lock: {}", e.getMessage());
+            LOG.error("Error occurred during lock: {}", e);
         }
     }
 
@@ -51,7 +51,7 @@ public class FileBasedMutex {
                 fileLock = null;
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during release: {}", e.getMessage());
+            LOG.error("Error occurred during release: {}", e);
         }
     }
 
@@ -67,7 +67,7 @@ public class FileBasedMutex {
                 fileChannel.close();
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during close: {}", e.getMessage());
+            LOG.error("Error occurred during close: {}", e);
         }
     }
 
@@ -93,7 +93,7 @@ public class FileBasedMutex {
             fileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
             fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 1);
         } catch (IOException e) {
-            LOG.error("Error occurred during lockfile creation: {}", e.getMessage());
+            LOG.error("Error occurred during lockfile creation: {}", e);
         }
     }
 }

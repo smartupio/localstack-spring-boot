@@ -1,13 +1,13 @@
-package io.smartup.localstack;
+package io.smartup.cloud.localstack;
 
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.PortBinding;
-import io.smartup.docker.DockerService;
-import io.smartup.utils.FileBasedCounter;
-import io.smartup.utils.FileBasedMutex;
+import io.smartup.cloud.docker.DockerService;
+import io.smartup.cloud.utils.FileBasedMutex;
+import io.smartup.cloud.utils.FileBasedCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,20 +60,22 @@ public class LocalStackService {
     public void start() {
         fileBasedMutex.lock();
         LOG.info("Checking if LocalStack image exists...");
-        Optional<Image> imageOptional = dockerService.getImageByName(LOCALSTACK_IMAGE);
+        try {
+            Optional<Image> imageOptional = dockerService.getImageByName(LOCALSTACK_IMAGE);
 
-        if (!imageOptional.isPresent()) {
-            LOG.info("Pulling LocalStack image");
-            dockerService.pullDockerImage(LOCALSTACK_CONTAINER);
+            if (!imageOptional.isPresent()) {
+                LOG.info("Pulling LocalStack image");
+                dockerService.pullDockerImage(LOCALSTACK_CONTAINER);
+            }
+
+            LOG.info("Checking if container exists...");
+            Optional<Container> containerOptional = dockerService.getContainerByName(LOCALSTACK_CONTAINER, false);
+            Container container = containerOptional.orElseGet(this::createLocalStackContainer);
+            dockerService.startContainer(container);
+            fileBasedCounter.increment();
+        } finally {
+            fileBasedMutex.release();
         }
-
-        LOG.info("Checking if container exists...");
-        Optional<Container> containerOptional = dockerService.getContainerByName(LOCALSTACK_CONTAINER, false);
-        Container container = containerOptional.orElseGet(this::createLocalStackContainer);
-
-        dockerService.startContainer(container);
-        fileBasedCounter.increment();
-        fileBasedMutex.release();
     }
 
     /**
@@ -89,10 +91,12 @@ public class LocalStackService {
 
         if (currentValue == 0 && containerRuns.isPresent()) {
             LOG.info("Stopping the container...");
-            dockerService.stopContainer(containerRuns.get(), 30);
-
-            fileBasedCounter.destroy();
-            fileBasedMutex.destroy();
+            try {
+                dockerService.stopContainer(containerRuns.get(), 30);
+            } finally {
+                fileBasedCounter.destroy();
+                fileBasedMutex.destroy();
+            }
         } else {
             fileBasedCounter.close();
             fileBasedMutex.close();

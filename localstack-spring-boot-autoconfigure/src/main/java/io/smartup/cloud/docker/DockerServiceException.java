@@ -1,4 +1,4 @@
-package io.smartup.docker;
+package io.smartup.cloud.docker;
 
 public class DockerServiceException extends RuntimeException {
     public DockerServiceException(Throwable cause) {

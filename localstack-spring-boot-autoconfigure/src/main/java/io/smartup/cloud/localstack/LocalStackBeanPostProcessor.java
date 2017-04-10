@@ -1,4 +1,4 @@
-package io.smartup.localstack;
+package io.smartup.cloud.localstack;
 
 import com.amazonaws.AmazonWebServiceClient;
 import com.amazonaws.regions.Region;

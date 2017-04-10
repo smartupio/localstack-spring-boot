@@ -4,13 +4,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.smartup</groupId>
-    <artifactId>localstack-spring-boot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <parent>
+        <groupId>io.smartup.cloud</groupId>
+        <artifactId>smartup-parent-pom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
+    <artifactId>localstack-spring-boot</artifactId>
+    <packaging>pom</packaging>
     <name>localstack-spring-boot</name>
     <description>SmartUp LocalStack Spring Boot Starter and AutoConfigure</description>
+
+    <scm>
+        <url>https://github.smartup.internal/backend/localstack-spring-boot</url>
+        <connection>scm:git:git@github.smartup.internal:backend/localstack-spring-boot.git</connection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <url>http://nexus.smartup.internal:8081/repository/maven-public</url>
+        </repository>
+    </repositories>
 
     <modules>
         <module>localstack-spring-boot-starter</module>

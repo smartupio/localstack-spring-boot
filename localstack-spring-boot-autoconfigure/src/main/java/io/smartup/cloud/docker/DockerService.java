@@ -1,4 +1,4 @@
-package io.smartup.docker;
+package io.smartup.cloud.docker;
 
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
@@ -36,7 +36,6 @@ public class DockerService {
      *
      * @see Container
      */
-    
     public Container createContainer(ContainerConfig containerConfig, String name) {
         try {
             ContainerCreation containerCreation = dockerClient.createContainer(containerConfig, name);

@@ -1,4 +1,4 @@
-package io.smartup.utils;
+package io.smartup.cloud.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +73,7 @@ public class FileBasedCounter {
                 fileChannel.close();
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during counter close: {}", e.getMessage());
+            LOG.error("Error occurred during counter close: {}", e);
         }
     }
 
@@ -96,7 +96,7 @@ public class FileBasedCounter {
         try {
             fileLock = fileChannel.lock();
         } catch (IOException e) {
-            LOG.error("Error occurred during lock: {}", e.getMessage());
+            LOG.error("Error occurred during lock: {}", e);
         }
     }
 
@@ -110,7 +110,7 @@ public class FileBasedCounter {
                 fileLock = null;
             }
         } catch (IOException e) {
-            LOG.error("Error occured during release: {}", e.getMessage());
+            LOG.error("Error occured during release: {}", e);
         }
     }
 
@@ -143,7 +143,7 @@ public class FileBasedCounter {
             MappedByteBuffer byteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 4);
             intBuffer = byteBuffer.asIntBuffer();
         } catch (IOException e) {
-            LOG.error("Error occured during lockfile creation: {}", e.getMessage());
+            LOG.error("Error occured during lockfile creation: {}", e);
         }
     }
 }
