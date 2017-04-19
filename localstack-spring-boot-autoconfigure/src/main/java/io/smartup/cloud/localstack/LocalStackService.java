@@ -6,18 +6,18 @@ import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.PortBinding;
 import io.smartup.cloud.docker.DockerService;
-import io.smartup.cloud.utils.FileBasedMutex;
 import io.smartup.cloud.utils.FileBasedCounter;
+import io.smartup.cloud.utils.FileBasedMutex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * LocalStackService provides methods for starting and stopping the LocalStack docker container.
@@ -29,30 +29,27 @@ import java.util.stream.Collectors;
  * @see FileBasedMutex
  */
 public class LocalStackService {
-    private static final String LOCALSTACK_IMAGE = "atlassianlabs/localstack";
+    private static final String LOCALSTACK_IMAGE = "ambrusadrianz/localstack-mirror";
     private static final String LOCALSTACK_CONTAINER = "localstack-smartup";
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalStackService.class);
 
     private final FileBasedMutex fileBasedMutex;
     private final FileBasedCounter fileBasedCounter;
-    private final LocalStackProperties localStackProperties;
     private final DockerService dockerService;
 
     public LocalStackService(FileBasedMutex fileBasedMutex,
                              FileBasedCounter fileBasedCounter,
-                             LocalStackProperties localStackProperties,
                              DockerService dockerService) {
         this.fileBasedMutex = fileBasedMutex;
         this.fileBasedCounter = fileBasedCounter;
-        this.localStackProperties = localStackProperties;
         this.dockerService = dockerService;
     }
 
     /**
      * The method will check if the LocalStack image exists on the machine.
      * If it does not exist, it will pull the image from DockerHub.
-     *
+     * <p>
      * If the container does not exist, a container will be created.
      * If the container is already started, it won't start a new container, otherwise the
      * container will be started.
@@ -65,7 +62,7 @@ public class LocalStackService {
 
             if (!imageOptional.isPresent()) {
                 LOG.info("Pulling LocalStack image");
-                dockerService.pullDockerImage(LOCALSTACK_CONTAINER);
+                dockerService.pullDockerImage(LOCALSTACK_IMAGE);
             }
 
             LOG.info("Checking if container exists...");
@@ -109,25 +106,28 @@ public class LocalStackService {
     }
 
     private ContainerConfig createLocalStackContainerConfig() {
-        List<LocalStackProperties.Service> allServices = localStackProperties.getAllServices();
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
 
-        allServices.forEach(s ->
-                portBindings.put(
-                        s.getDockerPort(),
-                        Collections.singletonList(PortBinding.of(LocalStackProperties.HOST, s.getDockerPort()))
-                )
-        );
+        Set<String> exposedPorts = generateExposedPorts();
+
+        exposedPorts.forEach(s -> portBindings.put(s, Collections.singletonList(PortBinding.of("localhost", s))));
 
         HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
-
-        Set<String> exposedPorts =
-                allServices.stream().map(LocalStackProperties.Service::getDockerPort).collect(Collectors.toSet());
 
         return ContainerConfig.builder()
                 .image(LOCALSTACK_IMAGE)
                 .hostConfig(hostConfig)
                 .exposedPorts(exposedPorts)
                 .build();
+    }
+
+    private Set<String> generateExposedPorts() {
+        Set<String> exposedPorts = new HashSet<>();
+
+        for (int i = 4567; i < 4578; i++) {
+            exposedPorts.add(String.valueOf(i));
+        }
+
+        return exposedPorts;
     }
 }

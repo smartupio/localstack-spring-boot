@@ -6,14 +6,15 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import io.smartup.cloud.docker.DockerService;
 import io.smartup.cloud.utils.FileBasedCounter;
 import io.smartup.cloud.utils.FileBasedMutex;
+import io.smartup.cloud.configurators.LocalStackConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
-@EnableConfigurationProperties(LocalStackProperties.class)
 @ConditionalOnProperty(prefix = "localstack", name = "enabled", havingValue = "true")
+@Import(LocalStackConfigurator.class)
 public class LocalStackAutoConfiguration {
     @Bean
     public DockerClient dockerClient() throws DockerCertificateException {
@@ -31,19 +32,13 @@ public class LocalStackAutoConfiguration {
     }
 
     @Bean
-    public LocalStackBeanPostProcessor localStackBeanPostProcessor(LocalStackProperties localStackProperties) {
-        return new LocalStackBeanPostProcessor(localStackProperties);
-    }
-
-    @Bean
     public DockerService dockerService(DockerClient dockerClient) {
         return new DockerService(dockerClient);
     }
 
     @Bean
-    public LocalStackService localStackService(FileBasedMutex fileBasedMutex, FileBasedCounter fileBasedCounter,
-                                               LocalStackProperties localStackProperties, DockerService dockerService) {
-        return new LocalStackService(fileBasedMutex, fileBasedCounter, localStackProperties, dockerService);
+    public LocalStackService localStackService(FileBasedMutex fileBasedMutex, FileBasedCounter fileBasedCounter, DockerService dockerService) {
+        return new LocalStackService(fileBasedMutex, fileBasedCounter, dockerService);
     }
 
     @Bean
