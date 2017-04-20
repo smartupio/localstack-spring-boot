@@ -1,7 +1,9 @@
 package io.smartup.cloud.configurators;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sqs.AmazonSQS;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -49,6 +51,26 @@ public class LocalStackConfigurator {
         @Bean
         public AmazonSNSConfigurator amazonSNSConfigurator() {
             return new AmazonSNSConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "route53.enabled", havingValue = "true")
+    @ConditionalOnClass(AmazonRoute53.class)
+    public static class AmazonRoute53Configuration {
+        @Bean
+        public AmazonRoute53Configurator amazonRoute53Configurator() {
+            return new AmazonRoute53Configurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "ses.enabled", havingValue = "true")
+    @ConditionalOnClass(AmazonSimpleEmailService.class)
+    public static class AmazonSESConfiguration {
+        @Bean
+        public AmazonSESConfigurator amazonSESConfigurator() {
+            return new AmazonSESConfigurator();
         }
     }
 }

@@ -124,7 +124,7 @@ public class LocalStackService {
     private Set<String> generateExposedPorts() {
         Set<String> exposedPorts = new HashSet<>();
 
-        for (int i = 4567; i < 4578; i++) {
+        for (int i = 4565; i < 4578; i++) {
             exposedPorts.add(String.valueOf(i));
         }
 
