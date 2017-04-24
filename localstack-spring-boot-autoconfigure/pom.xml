@@ -26,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <aws.sdk.version>1.11.114</aws.sdk.version>
+        <aws.sdk.version>1.11.123</aws.sdk.version>
         <docker.client.version>8.3.1</docker.client.version>
         <aws.sqs.jms>1.0.2</aws.sqs.jms>
 
