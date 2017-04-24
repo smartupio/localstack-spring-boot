@@ -28,6 +28,7 @@
 
         <aws.sdk.version>1.11.114</aws.sdk.version>
         <docker.client.version>8.3.1</docker.client.version>
+        <aws.sqs.jms>1.0.2</aws.sqs.jms>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -127,6 +128,13 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ses</artifactId>
             <version>${aws.sdk.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>amazon-sqs-java-messaging-lib</artifactId>
+            <version>${aws.sqs.jms}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

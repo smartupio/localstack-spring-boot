@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurators;
+package io.smartup.cloud.configurator;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -12,7 +12,7 @@ public class AmazonSESConfigurator extends AbstractAmazonClientConfigurator<Amaz
 
     @Override
     public String getEndpoint() {
-        return "http://localhost:4565";
+        return "http://localhost:4579";
     }
 
     @Override

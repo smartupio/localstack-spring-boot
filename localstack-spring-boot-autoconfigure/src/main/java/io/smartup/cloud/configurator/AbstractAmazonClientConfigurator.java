@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurators;
+package io.smartup.cloud.configurator;
 
 import com.amazonaws.regions.Region;
 import org.springframework.beans.BeansException;
@@ -55,10 +55,12 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
         Method setRegion = ReflectionUtils.findMethod(amazonBean.getClass(), "setRegion", Region.class);
         Method setEndpoint = ReflectionUtils.findMethod(amazonBean.getClass(), "setEndpoint", String.class);
 
+        preProcessBean(amazonBean);
         if (setRegion != null && setEndpoint != null) {
             ReflectionUtils.invokeMethod(setRegion, amazonBean, getRegion());
             ReflectionUtils.invokeMethod(setEndpoint, amazonBean, getEndpoint());
         }
+        postProcessBean(amazonBean);
 
         if (isImmutable != null) {
             ReflectionUtils.setField(isImmutable, amazonBean, immutable);
@@ -66,5 +68,13 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
         }
 
         return amazonBean;
+    }
+
+    protected void preProcessBean(T amazonBean) {
+
+    }
+
+    protected void postProcessBean(T amazonBean) {
+
     }
 }

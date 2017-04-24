@@ -1,4 +1,4 @@
-package io.smartup.cloud.utils;
+package io.smartup.cloud.concurrency;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +33,11 @@ public class FileBasedMutex {
      */
     public void lock() {
         try {
-            if (fileChannel != null) {
+            if (fileChannel != null && fileChannel.isOpen()) {
                 fileLock = fileChannel.lock();
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during lock: {}", e);
+            throw new FileBasedOperationException("Error occured during lock", e);
         }
     }
 
@@ -46,12 +46,12 @@ public class FileBasedMutex {
      */
     public void release() {
         try {
-            if (fileLock != null) {
+            if (fileLock != null && fileChannel.isOpen()) {
                 fileLock.release();
                 fileLock = null;
             }
         } catch (IOException e) {
-            LOG.error("Error occurred during release: {}", e);
+            throw new FileBasedOperationException("Error occurred during release", e);
         }
     }
 
@@ -63,7 +63,7 @@ public class FileBasedMutex {
     public void close() {
         try {
             release();
-            if (fileChannel != null) {
+            if (fileChannel != null && fileChannel.isOpen()) {
                 fileChannel.close();
             }
         } catch (IOException e) {

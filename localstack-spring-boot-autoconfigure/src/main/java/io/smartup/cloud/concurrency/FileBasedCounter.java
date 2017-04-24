@@ -1,4 +1,4 @@
-package io.smartup.cloud.utils;
+package io.smartup.cloud.concurrency;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +38,12 @@ public class FileBasedCounter {
     public int increment() {
         lock();
 
-        int currentValue = getValue();
-        setValue(currentValue + 1);
+        int currentValue = getValue() + 1;
+        setValue(currentValue);
 
         release();
 
-        return currentValue + 1;
+        return currentValue;
     }
 
     /**
@@ -53,12 +53,12 @@ public class FileBasedCounter {
     public int decrement() {
         lock();
 
-        int currentValue = getValue();
-        setValue(currentValue - 1);
+        int currentValue = getValue() - 1;
+        setValue(currentValue);
 
         release();
 
-        return currentValue - 1;
+        return currentValue;
     }
 
     /**
@@ -69,7 +69,7 @@ public class FileBasedCounter {
     public void close() {
         try {
             release();
-            if (fileChannel != null) {
+            if (fileChannel != null && fileChannel.isOpen()) {
                 fileChannel.close();
             }
         } catch (IOException e) {
@@ -94,9 +94,11 @@ public class FileBasedCounter {
      */
     private void lock() {
         try {
-            fileLock = fileChannel.lock();
+            if (fileChannel != null && fileChannel.isOpen()) {
+                fileLock = fileChannel.lock();
+            }
         } catch (IOException e) {
-            LOG.error("Error occurred during lock: {}", e);
+            throw new FileBasedOperationException("Could not acquire lock", e);
         }
     }
 
@@ -105,12 +107,12 @@ public class FileBasedCounter {
      */
     private void release() {
         try {
-            if (fileLock != null) {
+            if (fileLock != null && fileChannel.isOpen()) {
                 fileLock.release();
                 fileLock = null;
             }
         } catch (IOException e) {
-            LOG.error("Error occured during release: {}", e);
+            throw new FileBasedOperationException("Could not release lock", e);
         }
     }
 

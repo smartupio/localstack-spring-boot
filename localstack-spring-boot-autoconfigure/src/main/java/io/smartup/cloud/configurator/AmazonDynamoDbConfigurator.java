@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurators;
+package io.smartup.cloud.configurator;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;

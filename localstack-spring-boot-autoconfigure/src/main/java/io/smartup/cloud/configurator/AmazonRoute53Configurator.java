@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurators;
+package io.smartup.cloud.configurator;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -12,7 +12,7 @@ public class AmazonRoute53Configurator extends AbstractAmazonClientConfigurator<
 
     @Override
     public String getEndpoint() {
-        return "http://localhost:4566";
+        return "http://localhost:4580";
     }
 
     @Override

@@ -1,5 +1,6 @@
-package io.smartup.cloud.configurators;
+package io.smartup.cloud.configurator;
 
+import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
@@ -71,6 +72,16 @@ public class LocalStackConfigurator {
         @Bean
         public AmazonSESConfigurator amazonSESConfigurator() {
             return new AmazonSESConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
+    @ConditionalOnClass(SQSConnectionFactory.class)
+    public static class SQSConnectionFactoryConfiguration {
+        @Bean
+        public SQSConnectionFactoryConfigurator sqsConnectionFactoryConfigurator() {
+            return new SQSConnectionFactoryConfigurator();
         }
     }
 }
