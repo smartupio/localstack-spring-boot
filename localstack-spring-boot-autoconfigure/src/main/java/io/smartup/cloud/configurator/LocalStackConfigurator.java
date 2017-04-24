@@ -7,7 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,7 @@ public class LocalStackConfigurator {
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
     @ConditionalOnClass(AmazonSQS.class)
+    @ConditionalOnMissingClass("com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient")
     public static class AmazonSQSConfiguration {
         @Bean
         public AmazonSQSConfigurator amazonSQSConfigurator() {
@@ -82,6 +85,16 @@ public class LocalStackConfigurator {
         @Bean
         public SQSConnectionFactoryConfigurator sqsConnectionFactoryConfigurator() {
             return new SQSConnectionFactoryConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
+    @ConditionalOnClass(AmazonSQSBufferedAsyncClient.class)
+    public static class SpringAmazonSQSAsyncConfiguration {
+        @Bean
+        public SpringAmazonSQSAsyncConfigurator springAmazonSQSAsyncConfigurator() {
+            return new SpringAmazonSQSAsyncConfigurator();
         }
     }
 }

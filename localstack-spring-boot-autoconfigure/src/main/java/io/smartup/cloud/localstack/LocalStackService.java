@@ -5,9 +5,9 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.PortBinding;
-import io.smartup.cloud.docker.DockerService;
 import io.smartup.cloud.concurrency.FileBasedCounter;
 import io.smartup.cloud.concurrency.FileBasedMutex;
+import io.smartup.cloud.docker.DockerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +69,14 @@ public class LocalStackService {
             LOG.info("Checking if container exists...");
             Optional<Container> containerOptional = dockerService.getContainerByName(LOCALSTACK_CONTAINER, false);
 
-            if (! containerOptional.isPresent()) {
-                LOG.info("Creating container");
-                Container container = createLocalStackContainer();
+            Container container = containerOptional.orElseGet(this::createLocalStackContainer);
+
+            if (container.state().equalsIgnoreCase("created") ||
+                    container.state().equalsIgnoreCase("exited")) {
                 dockerService.startContainer(container);
-            } else if (containerOptional.get().state().equals("exited")) {
-                LOG.info("Container exists");
-                dockerService.startContainer(containerOptional.get());
             }
 
-            fileBasedCounter.increment();
+            fileBasedCounter.incrementAndGet();
 
         } finally {
             fileBasedMutex.release();
@@ -91,7 +89,7 @@ public class LocalStackService {
      */
     public void stop() {
         fileBasedMutex.lock();
-        int currentValue = fileBasedCounter.decrement();
+        int currentValue = fileBasedCounter.decrementAndGet();
 
         LOG.info("The number of services using the container: {}", currentValue);
         Optional<Container> containerRuns = dockerService.getContainerByName(LOCALSTACK_CONTAINER, true);

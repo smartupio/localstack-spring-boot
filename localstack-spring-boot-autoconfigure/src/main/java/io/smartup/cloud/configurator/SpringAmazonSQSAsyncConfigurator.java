@@ -8,9 +8,9 @@ import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class SpringAmazonSQSAsyncConfigurator extends AbstractAmazonClientConfigurator<AmazonSQSBufferedAsyncClient>{
+    private boolean immutable;
 
     @Override
     public Class<AmazonSQSBufferedAsyncClient> getAmazonClientClass() {
@@ -29,37 +29,31 @@ public class SpringAmazonSQSAsyncConfigurator extends AbstractAmazonClientConfig
 
     @Override
     protected void preProcessBean(AmazonSQSBufferedAsyncClient amazonBean) {
+        this.immutable = setImmutable(amazonBean, false);
+    }
 
-        AmazonSQS realSqs;
+    @Override
+    protected void postProcessBean(AmazonSQSBufferedAsyncClient amazonBean) {
+        setImmutable(amazonBean, this.immutable);
+    }
 
+    private boolean setImmutable(AmazonSQSBufferedAsyncClient amazonBean, boolean immutable) {
         try {
-            realSqs = (AmazonSQS) ReflectionUtils.findField(AmazonSQSBufferedAsyncClient.class, "realSQS").get(amazonBean);
+            Field fieldRealSqs = ReflectionUtils.findField(AmazonSQSBufferedAsyncClient.class, "realSQS");
+            fieldRealSqs.setAccessible(true);
+            AmazonSQS realSqs = (AmazonSQS) fieldRealSqs.get(amazonBean);
+
+            Field isImmutable = ReflectionUtils.findField(realSqs.getClass(), "isImmutable");
+
+            if (isImmutable != null) {
+                isImmutable.setAccessible(true);
+                Boolean field = (Boolean) ReflectionUtils.getField(isImmutable, realSqs);
+                ReflectionUtils.setField(isImmutable, realSqs, immutable);
+                return field;
+            }
+            return false;
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Can not access field from realSQS", e);
-        }
-
-        Field isImmutable = ReflectionUtils.findField(realSqs.getClass(), "isImmutable");
-
-        boolean immutable = false;
-        if (isImmutable != null) {
-            isImmutable.setAccessible(true);
-            immutable = (Boolean) ReflectionUtils.getField(isImmutable, amazonBean);
-            ReflectionUtils.setField(isImmutable, amazonBean, false);
-        }
-
-        Method setRegion = ReflectionUtils.findMethod(amazonBean.getClass(), "setRegion", Region.class);
-        Method setEndpoint = ReflectionUtils.findMethod(amazonBean.getClass(), "setEndpoint", String.class);
-
-        preProcessBean(amazonBean);
-        if (setRegion != null && setEndpoint != null) {
-            ReflectionUtils.invokeMethod(setRegion, amazonBean, getRegion());
-            ReflectionUtils.invokeMethod(setEndpoint, amazonBean, getEndpoint());
-        }
-        postProcessBean(amazonBean);
-
-        if (isImmutable != null) {
-            ReflectionUtils.setField(isImmutable, amazonBean, immutable);
-            isImmutable.setAccessible(false);
         }
     }
 }
