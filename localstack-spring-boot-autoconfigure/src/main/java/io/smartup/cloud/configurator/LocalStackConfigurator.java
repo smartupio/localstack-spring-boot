@@ -8,8 +8,8 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class LocalStackConfigurator {
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "s3.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonS3.class)
+    @ConditionalOnBean(AmazonS3.class)
     public static class AmazonS3Configuration {
         @Bean
         public AmazonS3Configurator amazonS3Configurator() {
@@ -29,8 +29,8 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonSQS.class)
-    @ConditionalOnMissingClass("com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient")
+    @ConditionalOnBean(AmazonSQS.class)
+    @ConditionalOnMissingBean(AmazonSQSBufferedAsyncClient.class)
     public static class AmazonSQSConfiguration {
         @Bean
         public AmazonSQSConfigurator amazonSQSConfigurator() {
@@ -40,7 +40,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "dynamodb.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonDynamoDB.class)
+    @ConditionalOnBean(AmazonDynamoDB.class)
     public static class AmazonDynamoDbConfiguration {
         @Bean
         public AmazonDynamoDbConfigurator amazonDynamoDbConfigurator() {
@@ -50,7 +50,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sns.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonSNS.class)
+    @ConditionalOnBean(AmazonSNS.class)
     public static class AmazonSNSConfiguration {
         @Bean
         public AmazonSNSConfigurator amazonSNSConfigurator() {
@@ -60,7 +60,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "route53.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonRoute53.class)
+    @ConditionalOnBean(AmazonRoute53.class)
     public static class AmazonRoute53Configuration {
         @Bean
         public AmazonRoute53Configurator amazonRoute53Configurator() {
@@ -70,7 +70,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "ses.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonSimpleEmailService.class)
+    @ConditionalOnBean(AmazonSimpleEmailService.class)
     public static class AmazonSESConfiguration {
         @Bean
         public AmazonSESConfigurator amazonSESConfigurator() {
@@ -80,7 +80,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnClass(SQSConnectionFactory.class)
+    @ConditionalOnBean(SQSConnectionFactory.class)
     public static class SQSConnectionFactoryConfiguration {
         @Bean
         public SQSConnectionFactoryConfigurator sqsConnectionFactoryConfigurator() {
@@ -90,7 +90,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnClass(AmazonSQSBufferedAsyncClient.class)
+    @ConditionalOnBean(AmazonSQSBufferedAsyncClient.class)
     public static class SpringAmazonSQSAsyncConfiguration {
         @Bean
         public SpringAmazonSQSAsyncConfigurator springAmazonSQSAsyncConfigurator() {
