@@ -9,7 +9,7 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class LocalStackConfigurator {
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "s3.enabled", havingValue = "true")
-    @ConditionalOnBean(AmazonS3.class)
+    @ConditionalOnClass(AmazonS3.class)
     public static class AmazonS3Configuration {
         @Bean
         public AmazonS3Configurator amazonS3Configurator() {
@@ -29,8 +29,7 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnBean(AmazonSQS.class)
-    @ConditionalOnMissingBean(AmazonSQSBufferedAsyncClient.class)
+    @ConditionalOnBean({AmazonSQS.class, AmazonSQSBufferedAsyncClient.class})
     public static class AmazonSQSConfiguration {
         @Bean
         public AmazonSQSConfigurator amazonSQSConfigurator() {
@@ -85,16 +84,6 @@ public class LocalStackConfigurator {
         @Bean
         public SQSConnectionFactoryConfigurator sqsConnectionFactoryConfigurator() {
             return new SQSConnectionFactoryConfigurator();
-        }
-    }
-
-    @Configuration
-    @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnBean(AmazonSQSBufferedAsyncClient.class)
-    public static class SpringAmazonSQSAsyncConfiguration {
-        @Bean
-        public SpringAmazonSQSAsyncConfigurator springAmazonSQSAsyncConfigurator() {
-            return new SpringAmazonSQSAsyncConfigurator();
         }
     }
 }

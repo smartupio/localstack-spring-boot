@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 
 public abstract class AbstractAmazonClientConfigurator<T> implements ApplicationContextAware, BeanPostProcessor {
     private ApplicationContext applicationContext;
+    protected boolean immutable;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -43,15 +44,6 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
     protected T setup() {
         T amazonBean = getBean();
 
-        Field isImmutable = ReflectionUtils.findField(amazonBean.getClass(), "isImmutable");
-
-        boolean immutable = false;
-        if (isImmutable != null) {
-            isImmutable.setAccessible(true);
-            immutable = (Boolean) ReflectionUtils.getField(isImmutable, amazonBean);
-            ReflectionUtils.setField(isImmutable, amazonBean, false);
-        }
-
         Method setRegion = ReflectionUtils.findMethod(amazonBean.getClass(), "setRegion", Region.class);
         Method setEndpoint = ReflectionUtils.findMethod(amazonBean.getClass(), "setEndpoint", String.class);
 
@@ -62,19 +54,27 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
         }
         postProcessBean(amazonBean);
 
-        if (isImmutable != null) {
-            ReflectionUtils.setField(isImmutable, amazonBean, immutable);
-            isImmutable.setAccessible(false);
-        }
-
         return amazonBean;
     }
 
     protected void preProcessBean(T amazonBean) {
+        Field isImmutable = ReflectionUtils.findField(amazonBean.getClass(), "isImmutable");
 
+        if (isImmutable != null) {
+            isImmutable.setAccessible(true);
+            this.immutable = (Boolean) ReflectionUtils.getField(isImmutable, amazonBean);
+            ReflectionUtils.setField(isImmutable, amazonBean, false);
+            isImmutable.setAccessible(false);
+        }
     }
 
     protected void postProcessBean(T amazonBean) {
+        Field isImmutable = ReflectionUtils.findField(amazonBean.getClass(), "isImmutable");
 
+        if (isImmutable != null) {
+            isImmutable.setAccessible(true);
+            ReflectionUtils.setField(isImmutable, amazonBean, this.immutable);
+            isImmutable.setAccessible(false);
+        }
     }
 }
