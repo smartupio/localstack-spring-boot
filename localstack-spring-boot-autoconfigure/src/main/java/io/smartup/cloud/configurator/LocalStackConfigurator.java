@@ -6,8 +6,6 @@ import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,7 +27,6 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sqs.enabled", havingValue = "true")
-    @ConditionalOnBean({AmazonSQS.class, AmazonSQSBufferedAsyncClient.class})
     public static class AmazonSQSConfiguration {
         @Bean
         public AmazonSQSConfigurator amazonSQSConfigurator() {
