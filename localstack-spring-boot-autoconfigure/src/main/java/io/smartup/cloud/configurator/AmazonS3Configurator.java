@@ -23,6 +23,7 @@ public class AmazonS3Configurator extends AbstractAmazonClientConfigurator<Amazo
 
     @Override
     protected void preProcessBean(AmazonS3 amazonS3) {
+        super.preProcessBean(amazonS3);
         amazonS3.setS3ClientOptions(S3ClientOptions.builder().disableChunkedEncoding().setPathStyleAccess(true).build());
     }
 }
