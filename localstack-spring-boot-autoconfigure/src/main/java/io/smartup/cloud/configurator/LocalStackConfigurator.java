@@ -5,7 +5,6 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.sns.AmazonSNS;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -46,7 +45,6 @@ public class LocalStackConfigurator {
 
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "sns.enabled", havingValue = "true")
-    @ConditionalOnBean(AmazonSNS.class)
     public static class AmazonSNSConfiguration {
         @Bean
         public AmazonSNSConfigurator amazonSNSConfigurator() {
