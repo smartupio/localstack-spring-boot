@@ -9,40 +9,48 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 
-/**
- * FileBasedMutex functions as mutex between multiple JVM processes
- * <p>
- * For locking the class uses FileChannel and FileLock.
- *
- * @see FileChannel
- * @see FileLock
- */
-public class FileBasedMutex {
+public class FileBasedSharedLock {
     private static final Logger LOG = LoggerFactory.getLogger(FileBasedMutex.class);
-    private static final int LOCK_RETRY_COUNT = 5;
-    private static final int LOCK_RETRY_TIME = 5000;
+    private static final int LOCK_RETRY_COUNT = 3;
+    private static final int LOCK_RETRY_TIME = 3000;
 
     private FileLock fileLock;
-
     private final FileChannel fileChannel;
 
-    public FileBasedMutex(String fileName) {
+    public FileBasedSharedLock(String fileName) {
         try {
             File file = File.createTempFile(fileName, "");
             fileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new FileBasedOperationException("Error occured during lockfile creation: {}", e);
+            throw new FileBasedOperationException("Error occurred during lockfile creation: ", e);
         }
     }
 
     public void lock() {
         if (!fileChannel.isOpen()) {
-            return;
+            throw new FileBasedOperationException("Error occurred during shared lock creation fileChannel is close");
         }
+
+        try {
+            fileLock = fileChannel.lock(0, 1, true);
+        } catch (Exception e) {
+            LOG.info("Shared locking failed: {}", e);
+        }
+    }
+
+    public boolean lockExclusive() {
+        if (!fileChannel.isOpen()) {
+            return false;
+        }
+
+        if (fileLock != null && fileLock.isValid()) {
+            release();
+        }
+
         int i = 0;
         boolean isLocked = false;
         while (!isLocked && i < LOCK_RETRY_COUNT) {
-            fileLock = tryLock();
+            fileLock = tryLockExclusive();
 
             if (fileLock != null) {
                 isLocked = true;
@@ -54,15 +62,13 @@ public class FileBasedMutex {
             }
         }
 
-        if (!isLocked) {
-            throw new FileBasedOperationException("Could not acquire lock!");
-        }
+        return isLocked;
     }
 
     /**
-     * Release the mutex
+     * Release the lock
      */
-    public void release() {
+    private void release() {
         try {
             if (fileLock != null) {
                 fileLock.release();
@@ -73,26 +79,10 @@ public class FileBasedMutex {
         }
     }
 
-    /**
-     * Close the mutex
-     * <p>
-     * This method will release the FileLock if there is one and it will close the connection to the file.
-     */
-    public void close() {
-        try {
-            release();
-            if (fileChannel != null && fileChannel.isOpen()) {
-                fileChannel.close();
-            }
-        } catch (IOException e) {
-            LOG.error("Error occurred during close: {}", e);
-        }
-    }
-
-    private FileLock tryLock() {
+    private FileLock tryLockExclusive() {
         FileLock fileLock = null;
         try {
-            fileLock = fileChannel.tryLock();
+            fileLock = fileChannel.tryLock(0, 1, false);
         } catch (Exception e) {
             LOG.info("tryLock failed: ", e);
         }

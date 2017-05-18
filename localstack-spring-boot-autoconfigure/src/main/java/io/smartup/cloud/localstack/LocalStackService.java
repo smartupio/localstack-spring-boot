@@ -5,8 +5,8 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.PortBinding;
-import io.smartup.cloud.concurrency.FileBasedCounter;
 import io.smartup.cloud.concurrency.FileBasedMutex;
+import io.smartup.cloud.concurrency.FileBasedSharedLock;
 import io.smartup.cloud.docker.DockerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +26,8 @@ import java.util.stream.IntStream;
  * These methods will be synchronized between multiple JVM processes using FileBasedCounter
  * and FileBasedMutex.
  *
- * @see FileBasedCounter
  * @see FileBasedMutex
+ * @see FileBasedSharedLock
  */
 public class LocalStackService {
     private static final String LOCALSTACK_IMAGE = "atlassianlabs/localstack:0.3.11";
@@ -36,14 +36,15 @@ public class LocalStackService {
     private static final Logger LOG = LoggerFactory.getLogger(LocalStackService.class);
 
     private final FileBasedMutex fileBasedMutex;
-    private final FileBasedCounter fileBasedCounter;
+    private final FileBasedSharedLock fileBasedSharedLock;
     private final DockerService dockerService;
 
+    private boolean stoppedAlready = false;
+
     public LocalStackService(FileBasedMutex fileBasedMutex,
-                             FileBasedCounter fileBasedCounter,
-                             DockerService dockerService) {
+                             FileBasedSharedLock fileBasedSharedLock, DockerService dockerService) {
         this.fileBasedMutex = fileBasedMutex;
-        this.fileBasedCounter = fileBasedCounter;
+        this.fileBasedSharedLock = fileBasedSharedLock;
         this.dockerService = dockerService;
     }
 
@@ -57,8 +58,8 @@ public class LocalStackService {
      */
     public void start() {
         fileBasedMutex.lock();
-        LOG.info("Checking if LocalStack image exists...");
         try {
+            LOG.info("Checking if LocalStack image exists...");
             Optional<Image> imageOptional = dockerService.getImageByName(LOCALSTACK_IMAGE);
 
             if (!imageOptional.isPresent()) {
@@ -75,9 +76,7 @@ public class LocalStackService {
                     container.state().equalsIgnoreCase("exited")) {
                 dockerService.startContainer(container);
             }
-
-            fileBasedCounter.incrementAndGet();
-
+            fileBasedSharedLock.lock();
         } finally {
             fileBasedMutex.release();
         }
@@ -88,22 +87,24 @@ public class LocalStackService {
      * service that is using the container, the container will be stopped.
      */
     public void stop() {
-        fileBasedMutex.lock();
-        int currentValue = fileBasedCounter.decrementAndGet();
+        if (stoppedAlready) {
+            return;
+        }
+        stoppedAlready = true;
 
-        LOG.info("The number of services using the container: {}", currentValue);
-        Optional<Container> containerRuns = dockerService.getContainerByName(LOCALSTACK_CONTAINER, true);
+        try {
+            fileBasedMutex.lock();
+            boolean locked = fileBasedSharedLock.lockExclusive();
 
-        if (currentValue == 0 && containerRuns.isPresent()) {
-            LOG.info("Stopping the container...");
-            try {
-                dockerService.stopContainer(containerRuns.get(), 30);
-            } finally {
-                fileBasedCounter.destroy();
-                fileBasedMutex.destroy();
+            if (locked) {
+                LOG.info("No one is using the container, stopping it...");
+                dockerService
+                        .getContainerByName(LOCALSTACK_CONTAINER, true)
+                        .ifPresent(c -> dockerService.stopContainer(c, 30));
+            } else {
+                LOG.info("Someone else is still using the container, not stopping...");
             }
-        } else {
-            fileBasedCounter.close();
+        } finally {
             fileBasedMutex.close();
         }
     }

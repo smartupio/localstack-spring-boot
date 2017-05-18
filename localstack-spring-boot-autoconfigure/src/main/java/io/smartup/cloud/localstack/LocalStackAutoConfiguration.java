@@ -3,10 +3,10 @@ package io.smartup.cloud.localstack;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
-import io.smartup.cloud.docker.DockerService;
-import io.smartup.cloud.concurrency.FileBasedCounter;
 import io.smartup.cloud.concurrency.FileBasedMutex;
+import io.smartup.cloud.concurrency.FileBasedSharedLock;
 import io.smartup.cloud.configurator.LocalStackConfigurator;
+import io.smartup.cloud.docker.DockerService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +22,8 @@ public class LocalStackAutoConfiguration {
     }
 
     @Bean
-    public FileBasedCounter fileBasedCounter() {
-        return new FileBasedCounter(".lstck_cnt");
+    public FileBasedSharedLock fileBasedSharedLock() {
+        return new FileBasedSharedLock(".lstck_lck");
     }
 
     @Bean
@@ -37,8 +37,10 @@ public class LocalStackAutoConfiguration {
     }
 
     @Bean
-    public LocalStackService localStackService(FileBasedMutex fileBasedMutex, FileBasedCounter fileBasedCounter, DockerService dockerService) {
-        return new LocalStackService(fileBasedMutex, fileBasedCounter, dockerService);
+    public LocalStackService localStackService(FileBasedMutex fileBasedMutex,
+                                               FileBasedSharedLock fileBasedSharedLock,
+                                               DockerService dockerService) {
+        return new LocalStackService(fileBasedMutex, fileBasedSharedLock, dockerService);
     }
 
     @Bean
