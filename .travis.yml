@@ -1,0 +1,12 @@
+env:
+  global:
+    secure: d+ZZyx+TFlFkxqdIMB337wuSd1K8eyRuuR+3O7+bCanHXHHN23PJy13pwrjT6SUMNe9agCRbXRH+ZhmQbqap7Oto8pCCczAiOABDz1jZ+GzpMzVkC9c+4C2zOjjEYeJoFsre7jMqL2UuDiuue+ERrGa3j48NOb4sHb4eRKYVorI3lu/LMDFnJD8HtLs3jFT8nkdjNXUk2S8xZTP1nmtfXB3+RYFOlNuZz8ODA9Ww1tiSf8E2iomKS5at8Vj9IBLftxZW4k7OAR3SrwCGriFPz5KCTX3b6EIHW0erwdJqnzTFCUvdILJ4l9X0nUxEvvNfyyJtCz8KJ9G6F/0x6qTpS5qaRI3DYTz1RMvAZAHZxLzRzBUZsTGxS5xDdAJc8tnTS8xax3BNvEXL9uyPVkk9Ltl2IUS3JmtsKNjEVRza1t5KcqgHZivyAxIqWNGQi2/8lOzVfpzZCvz2MSAeJClFi4Xl085/aUNoc5zPBd8f0A1Gp4d8TkfxH0sgBSS3R6nc9msdi5ziBQS3gFyIJfdEb1Bp3QQPo1YIzICiIjgZV6Gl1EYpVzBvRqFpfDOZh18rjxmAALGEJsDeyGYWXOWHqpqC4Rjvj6Q0ISRUWH0JTOQUwPsV0sVV2G/g58SCdQQWqUVZXZpWYVGTREhXktD86BgzGTTdyU0gGcV6ZAzAx1s=
+jdk:
+- oraclejdk8
+cache:
+  directories:
+  - "$HOME/.m2"
+services:
+- docker
+script:
+- mvn clean deploy --settings settings.xml

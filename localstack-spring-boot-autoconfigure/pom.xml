@@ -22,6 +22,39 @@
         <url>http://www.smartup.io</url>
     </organization>
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </repository>
+        <repository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
