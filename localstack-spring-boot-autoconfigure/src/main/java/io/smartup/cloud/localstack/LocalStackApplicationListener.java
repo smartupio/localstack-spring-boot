@@ -21,9 +21,15 @@ import org.springframework.context.event.ContextClosedEvent;
  */
 public class LocalStackApplicationListener implements BeanPostProcessor, ApplicationListener<ContextClosedEvent> {
     private final LocalStackService localStackService;
-    public LocalStackApplicationListener(LocalStackService localStackService) {
+    private final boolean autoStart;
+
+    public LocalStackApplicationListener(LocalStackService localStackService, boolean autoStart) {
         this.localStackService = localStackService;
-        this.localStackService.start();
+        this.autoStart = autoStart;
+
+        if (autoStart) {
+            this.localStackService.start();
+        }
     }
 
     @Override
@@ -38,6 +44,8 @@ public class LocalStackApplicationListener implements BeanPostProcessor, Applica
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        localStackService.stop();
+        if (autoStart) {
+            localStackService.stop();
+        }
     }
 }

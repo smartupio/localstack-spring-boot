@@ -49,6 +49,10 @@ You need to make sure that the profile you want to use LocalStack in includes th
 ```
 
 The *localstack.enabled* config is mandatory, you must specify this.
+
+If *localstack.auto-start* config is true, then localstack the localstack docker image will be managed
+by the plugin, otherwise it's the responsibility of the user to download, start and stop container.
+
 The services that are going to be used must be specified, otherwise they won't be enabled.
 
 **Note:**

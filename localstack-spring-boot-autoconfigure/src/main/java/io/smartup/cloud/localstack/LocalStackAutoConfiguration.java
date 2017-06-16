@@ -7,6 +7,7 @@ import io.smartup.cloud.concurrency.FileBasedMutex;
 import io.smartup.cloud.concurrency.FileBasedSharedLock;
 import io.smartup.cloud.configurator.LocalStackConfigurator;
 import io.smartup.cloud.docker.DockerService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,8 @@ public class LocalStackAutoConfiguration {
     }
 
     @Bean
-    public LocalStackApplicationListener localStackApplicationListener(LocalStackService localStackService) {
-        return new LocalStackApplicationListener(localStackService);
+    public LocalStackApplicationListener localStackApplicationListener(LocalStackService localStackService,
+                                                                       @Value("${localstack.auto-start:true}") boolean autoStart) {
+        return new LocalStackApplicationListener(localStackService, autoStart);
     }
 }
