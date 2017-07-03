@@ -12,7 +12,7 @@ public class AmazonSNSConfigurator extends AbstractAmazonClientConfigurator<Amaz
 
     @Override
     public String getEndpoint() {
-        return "http://localhost:4575";
+        return "http://" + getLocalStackHost() + ":4575";
     }
 
     @Override

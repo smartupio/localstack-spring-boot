@@ -13,7 +13,7 @@ public class AmazonS3Configurator extends AbstractAmazonClientConfigurator<Amazo
 
     @Override
     public String getEndpoint() {
-        return "http://localhost:4572";
+        return "http://" + getLocalStackHost() + ":4572";
     }
 
     @Override

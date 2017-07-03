@@ -1,7 +1,9 @@
 package io.smartup.cloud.configurator;
 
 import com.amazonaws.regions.Region;
+import io.smartup.cloud.localstack.LocalStackHostProvider;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -14,6 +16,9 @@ import java.lang.reflect.Method;
 public abstract class AbstractAmazonClientConfigurator<T> implements ApplicationContextAware, BeanPostProcessor {
     private ApplicationContext applicationContext;
     protected boolean immutable;
+
+    @Autowired
+    private LocalStackHostProvider localStackHostProvider;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -28,6 +33,10 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    protected final String getLocalStackHost(){
+        return localStackHostProvider.provideLocalStackHost();
     }
 
     protected T getBean() {
