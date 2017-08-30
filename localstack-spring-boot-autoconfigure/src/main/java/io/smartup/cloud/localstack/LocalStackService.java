@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
  * @see FileBasedSharedLock
  */
 public class LocalStackService {
-    private static final String LOCALSTACK_IMAGE = "atlassianlabs/localstack:0.5.3";
+    private static final String LOCALSTACK_IMAGE = "localstack/localstack:latest";
     private static final String LOCALSTACK_CONTAINER = "localstack-smartup";
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalStackService.class);

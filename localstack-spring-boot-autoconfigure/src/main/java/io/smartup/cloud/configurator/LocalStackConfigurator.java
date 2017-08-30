@@ -2,6 +2,7 @@ package io.smartup.cloud.configurator;
 
 import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBStreams;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -79,6 +80,16 @@ public class LocalStackConfigurator {
         @Bean
         public SQSConnectionFactoryConfigurator sqsConnectionFactoryConfigurator() {
             return new SQSConnectionFactoryConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "dynamodb-streams.enabled", havingValue = "true")
+    @ConditionalOnBean(AmazonDynamoDBStreams.class)
+    public static class AmazonDynamoDbStreamsConfiguration {
+        @Bean
+        public AmazonDynamoDbStreamsConfigurator amazonDynamoDbStreamsConfigurator() {
+            return new AmazonDynamoDbStreamsConfigurator();
         }
     }
 }
