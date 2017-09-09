@@ -25,19 +25,6 @@ public class SQSConnectionFactoryConfigurator extends AbstractAmazonClientConfig
 
     @Override
     protected SQSConnectionFactory setup() {
-        SQSConnectionFactory amazonBean = getBean();
-
-        Field region = ReflectionUtils.findField(SQSConnectionFactory.class, "region");
-        Field endpoint = ReflectionUtils.findField(SQSConnectionFactory.class, "endpoint");
-
-        region.setAccessible(true);
-        endpoint.setAccessible(true);
-
-        preProcessBean(amazonBean);
-        ReflectionUtils.setField(region, amazonBean, getRegion());
-        ReflectionUtils.setField(endpoint, amazonBean, getEndpoint());
-        postProcessBean(amazonBean);
-
-        return amazonBean;
+        return getBean();
     }
 }
