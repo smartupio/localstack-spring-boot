@@ -1,0 +1,136 @@
+version: 2
+executorType: docker
+
+jobs:
+  checkout_code:
+    docker:
+      - image: circleci/openjdk:8
+        cmd: ["/bin/bash"]
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ./repo/*
+            - ./.ssh/*
+  build:
+    docker:
+      - image: circleci/openjdk:8
+        cmd: ["/bin/bash"]
+
+    working_directory: ~/repo
+
+    environment:
+       MAVEN_OPTS: "-Xms384m -Xmx512m -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:AdaptiveSizePolicyWeight=90"
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - restore_cache:
+          keys:
+          - m2-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Build
+          command: mvn -B clean package -s settings.xml
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
+
+  deploy_jar_develop:
+    docker:
+      - image: circleci/openjdk:8
+        cmd: ["/bin/bash"]
+
+    working_directory: ~/repo
+    environment:
+       JAVA_OPTIONS: "-Xms512m -Xmx1g -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:AdaptiveSizePolicyWeight=90"
+       MAVEN_OPTS: "-Xms384m -Xmx512m -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:AdaptiveSizePolicyWeight=90"
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - restore_cache:
+          keys:
+          - m2-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Deploy SNAPSHOT JAR to Artifactory
+          command: mvn -B deploy --settings settings.xml
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
+
+  deploy_jar_master:
+    docker:
+      - image: circleci/openjdk:8
+        cmd: ["/bin/bash"]
+
+    working_directory: ~/repo
+    environment:
+       JAVA_OPTIONS: "-Xms512m -Xmx1g -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:AdaptiveSizePolicyWeight=90"
+       MAVEN_OPTS: "-Xms384m -Xmx512m -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:AdaptiveSizePolicyWeight=90"
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - restore_cache:
+          keys:
+          - m2-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Deploy RELEASE JAR to Artifactory
+          command: |
+            mvn -B deploy --settings settings.xml
+            git config --global user.email "devops@smartup.io"
+            git config --global user.name "CircleCI"
+            mvn scm:tag -Dtag='${project.version}'
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
+
+workflows:
+  version: 2
+  pull_request_workflow:
+    jobs:
+      - checkout_code:
+          filters:
+            branches:
+              ignore: /(develop|master)/
+      - build:
+          context: org-global
+          requires:
+            - checkout_code
+
+  develop_workflow:
+    jobs:
+      - checkout_code:
+          filters:
+            branches:
+              only: /^develop$/
+      - deploy_jar_develop:
+          requires:
+            - checkout_code
+
+  master_workflow:
+    jobs:
+      - checkout_code:
+          filters:
+            branches:
+              only: /^master$/
+      - deploy_jar_master:
+          requires:
+            - checkout_code
