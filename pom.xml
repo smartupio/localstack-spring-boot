@@ -18,7 +18,7 @@
 
     <scm>
         <url>https://github.com/smartupio/localstack-spring-boot</url>
-        <connection>scm:https://github.com/smartupio/localstack-spring-boot.git</connection>
+        <connection>scm:git:git@github.com:smartupio/localstack-spring-boot.git</connection>
     </scm>
 
     <repositories>
