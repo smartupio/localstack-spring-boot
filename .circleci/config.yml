@@ -122,6 +122,7 @@ workflows:
             branches:
               only: /^develop$/
       - deploy_jar_develop:
+          context: org-global
           requires:
             - checkout_code
 
@@ -132,5 +133,6 @@ workflows:
             branches:
               only: /^master$/
       - deploy_jar_master:
+          context: org-global
           requires:
             - checkout_code

@@ -10,6 +10,7 @@
         <version>1.0.6</version>
     </parent>
 
+    <version>1.0.0</version>
     <artifactId>localstack-spring-boot</artifactId>
     <packaging>pom</packaging>
     <name>localstack-spring-boot</name>
