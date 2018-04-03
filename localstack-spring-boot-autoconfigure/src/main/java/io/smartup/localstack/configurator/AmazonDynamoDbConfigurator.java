@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurator;
+package io.smartup.localstack.configurator;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;

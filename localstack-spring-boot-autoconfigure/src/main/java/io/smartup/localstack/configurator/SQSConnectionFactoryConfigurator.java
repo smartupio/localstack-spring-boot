@@ -1,11 +1,8 @@
-package io.smartup.cloud.configurator;
+package io.smartup.localstack.configurator;
 
 import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Field;
 
 public class SQSConnectionFactoryConfigurator extends AbstractAmazonClientConfigurator<SQSConnectionFactory> {
     @Override

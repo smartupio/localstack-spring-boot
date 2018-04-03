@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.smartup.cloud.localstack.LocalStackAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=LocalStackAutoConfiguration

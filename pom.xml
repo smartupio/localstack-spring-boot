@@ -4,59 +4,113 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>io.smartup.cloud</groupId>
-        <artifactId>smartup-parent-pom</artifactId>
-        <version>1.0.6</version>
-    </parent>
-
+    <groupId>io.smartup.localstack</groupId>
+    <artifactId>localstack-spring-boot-reactor</artifactId>
     <version>1.0.0</version>
-    <artifactId>localstack-spring-boot</artifactId>
     <packaging>pom</packaging>
-    <name>localstack-spring-boot</name>
-    <description>SmartUp LocalStack Spring Boot Starter and AutoConfigure</description>
+    <name>localstack-spring-boot-reactor</name>
+    <description>LocalStack Spring Boot Reactor</description>
+
+    <developers>
+        <developer>
+            <id>matelang</id>
+            <name>Mate Lang</name>
+            <email>mate@smartup.io</email>
+            <url>https://www.smartup.io</url>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
     <scm>
-        <url>https://github.com/smartupio/smartup-localstack-spring-boot</url>
-        <connection>scm:git:git@github.com:smartupio/smartup-localstack-spring-boot.git</connection>
+        <url>https://github.com/smartupio/localstack-spring-boot</url>
+        <connection>scm:git:git@github.com:smartupio/localstack-spring-boot.git</connection>
     </scm>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>smartup-release</id>
-            <name>libs-release</name>
-            <url>https://smartup.jfrog.io/smartup/libs-release</url>
-        </repository>
-        <repository>
-            <snapshots/>
-            <id>smartup-snapshot</id>
-            <name>libs-snapshot</name>
-            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>smartup-release</id>
-            <name>libs-release</name>
-            <url>https://smartup.jfrog.io/smartup/libs-release</url>
-        </pluginRepository>
-        <pluginRepository>
-            <snapshots/>
-            <id>smartup-snapshot</id>
-            <name>libs-snapshot</name>
-            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <properties>
+        <sonatype.nexusstaging.plugin.version>1.6.8</sonatype.nexusstaging.plugin.version>
+        <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
+    </properties>
 
     <modules>
+        <module>localstack-spring-boot-parent</module>
         <module>localstack-spring-boot-starter</module>
         <module>localstack-spring-boot-autoconfigure</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${sonatype.nexusstaging.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <skipNexusStagingDeployMojo>${skip.artifactdeploy}</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven.gpg.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skip.codesigning}</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <skip.codesigning>true</skip.codesigning>
+                <skip.artifactdeploy>true</skip.artifactdeploy>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip.codesigning>false</skip.codesigning>
+                <skip.artifactdeploy>false</skip.artifactdeploy>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

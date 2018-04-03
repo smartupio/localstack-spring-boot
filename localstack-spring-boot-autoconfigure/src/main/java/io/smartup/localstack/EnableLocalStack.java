@@ -1,4 +1,4 @@
-package io.smartup.cloud.localstack;
+package io.smartup.localstack;
 
 import org.springframework.context.annotation.Import;
 

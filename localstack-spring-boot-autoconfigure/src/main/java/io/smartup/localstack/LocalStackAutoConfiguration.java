@@ -1,4 +1,4 @@
-package io.smartup.cloud.configurator;
+package io.smartup.localstack;
 
 import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -6,6 +6,14 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBStreams;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import io.smartup.localstack.configurator.AmazonDynamoDbConfigurator;
+import io.smartup.localstack.configurator.AmazonDynamoDbStreamsConfigurator;
+import io.smartup.localstack.configurator.AmazonRoute53Configurator;
+import io.smartup.localstack.configurator.AmazonS3Configurator;
+import io.smartup.localstack.configurator.AmazonSESConfigurator;
+import io.smartup.localstack.configurator.AmazonSNSConfigurator;
+import io.smartup.localstack.configurator.AmazonSQSConfigurator;
+import io.smartup.localstack.configurator.SQSConnectionFactoryConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,7 +22,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "localstack", name = "enabled", havingValue = "true")
-public class LocalStackConfigurator {
+public class LocalStackAutoConfiguration {
+
     @Configuration
     @ConditionalOnProperty(prefix = "localstack", name = "s3.enabled", havingValue = "true")
     @ConditionalOnClass(AmazonS3.class)

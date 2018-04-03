@@ -1,7 +1,7 @@
-package io.smartup.cloud.configurator;
+package io.smartup.localstack.configurator;
 
 import com.amazonaws.regions.Region;
-import io.smartup.cloud.localstack.LocalStackHostProvider;
+import io.smartup.localstack.LocalStackHostProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
