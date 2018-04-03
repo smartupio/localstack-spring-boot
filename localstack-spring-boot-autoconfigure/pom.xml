@@ -18,10 +18,47 @@
 
     <name>localstack-spring-boot-autoconfigure</name>
     <description>Spring Boot AutoConfiguration for using AtlassianLabs' Localstack</description>
-    <organization>
-        <name>SmartUp.io</name>
-        <url>http://www.smartup.io</url>
-    </organization>
+    <url>https://github.com/smartupio/localtack-spring-boot</url>
+
+    <developers>
+        <developer>
+            <id>matelang</id>
+            <name>Mate Lang</name>
+            <email>mate@smartup.io</email>
+            <url>https://www.smartup.io</url>
+        </developer>
+
+        <developer>
+            <id>adrian@smartup.io</id>
+            <name>Adrian Ambrus</name>
+            <email>adrian@smartup.io</email>
+            <url>https://www.smartup.io</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://github.com/smartupio/localstack-spring-boot</url>
+        <connection>scm:git:git@github.com:smartupio/localstack-spring-boot.git</connection>
+    </scm>
+
 
     <dependencies>
         <dependency>
