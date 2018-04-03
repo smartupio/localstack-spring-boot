@@ -12,11 +12,11 @@
         <relativePath>../localstack-spring-boot-parent</relativePath>
     </parent>
 
-    <artifactId>localtack-spring-boot-starter</artifactId>
+    <artifactId>localstack-spring-boot-starter</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>localtack-spring-boot-starter</name>
+    <name>localstack-spring-boot-starter</name>
     <description>Spring Boot Starter for using LocalStack</description>
     <organization>
         <name>SmartUp.io</name>
@@ -25,7 +25,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.smartup.cloud</groupId>
+            <groupId>io.smartup.localstack</groupId>
             <artifactId>localstack-spring-boot-autoconfigure</artifactId>
             <version>${project.version}</version>
         </dependency>
