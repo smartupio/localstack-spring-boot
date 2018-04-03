@@ -101,4 +101,9 @@ public class LocalStackAutoConfiguration {
             return new AmazonDynamoDbStreamsConfigurator();
         }
     }
+
+    @Bean
+    public LocalStackHostProvider localStackHostProvider() {
+        return new LocalStackHostProvider();
+    }
 }

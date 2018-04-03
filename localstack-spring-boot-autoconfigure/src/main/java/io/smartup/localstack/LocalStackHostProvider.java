@@ -2,12 +2,10 @@ package io.smartup.localstack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@Component
 public class LocalStackHostProvider {
 
     private static final Logger log = LoggerFactory.getLogger(LocalStackHostProvider.class);
