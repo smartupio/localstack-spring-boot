@@ -1,15 +1,13 @@
-# Smartup LocalStack Spring Boot Autoconfiguration
+# Smartup LocalStack Spring Boot AutoConfiguration
 
 ## Introduction
 
-The scope of this autoconfiguration library is to
-provide a simple way for mocking AWS services on a local machine.
-
-This could be beneficial for dev and test purposes.
+The scope of this AutoConfiguration library is to
+provide a simple way for configuring AWS clients with localstack.
 
 ## Requirements
 
-To use this autoconfiguration you need **Docker 1.6+** and **JDK8**.
+To use this AutoConfiguration you need **JDK8**.
 
 ## Usage
 
@@ -50,22 +48,9 @@ You need to make sure that the profile you want to use LocalStack in includes th
 
 The *localstack.enabled* config is mandatory, you must specify this.
 
-If *localstack.auto-start* config is true, then localstack the localstack docker image will be managed
-by the plugin, otherwise it's the responsibility of the user to download, start and stop container.
-
 The services that are going to be used must be specified, otherwise they won't be enabled.
-
-**Note:**
-If a service is not enabled that does not mean that the service won't run, it just means that it
-won't be configured.
 
 ## How it works
 
-**Smartup LocalStack Autoconfiguration** works by pulling and starting the *atlassianlabs/localstack* 
-Docker image and running a container on application startup. 
-
 The configuration of the *AmazonWebServiceClients'* present in your project will be 
 overwritten if the configuration is enabled.
-
-If multiple services are using the Docker container then the last one that shuts down will close the
-docker container.
