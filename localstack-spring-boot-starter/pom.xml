@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.smartup.cloud</groupId>
+        <artifactId>smartup-parent-pom</artifactId>
+        <version>1.0.6</version>
+    </parent>
+
+    <artifactId>localstack-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>localstack-spring-boot-starter</name>
+    <description>Spring Boot Starter for using AtlassianLabs' Localstack</description>
+    <organization>
+        <name>SmartUp.io</name>
+        <url>http://www.smartup.io</url>
+    </organization>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </repository>
+        <repository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <properties>
+        <aws.sdk.version>1.11.114</aws.sdk.version>
+        <docker.client.version>8.3.1</docker.client.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.smartup.cloud</groupId>
+            <artifactId>localstack-spring-boot-autoconfigure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-client</artifactId>
+            <classifier>shaded</classifier>
+            <version>${docker.client.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

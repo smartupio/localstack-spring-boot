@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.smartup.cloud</groupId>
+        <artifactId>smartup-parent-pom</artifactId>
+        <version>1.0.6</version>
+    </parent>
+
+    <version>1.0.0</version>
+    <artifactId>localstack-spring-boot</artifactId>
+    <packaging>pom</packaging>
+    <name>localstack-spring-boot</name>
+    <description>SmartUp LocalStack Spring Boot Starter and AutoConfigure</description>
+
+    <scm>
+        <url>https://github.com/smartupio/smartup-localstack-spring-boot</url>
+        <connection>scm:git:git@github.com:smartupio/smartup-localstack-spring-boot.git</connection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </repository>
+        <repository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <modules>
+        <module>localstack-spring-boot-starter</module>
+        <module>localstack-spring-boot-autoconfigure</module>
+    </modules>
+
+</project>
