@@ -112,30 +112,6 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.boot.version}</version>
-                    <configuration>
-                        <classifier>exec</classifier>
-                        <fork>true</fork>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>package</id>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>build-info</id>
-                            <goals>
-                                <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${sonatype.nexusstaging.plugin.version}</version>
