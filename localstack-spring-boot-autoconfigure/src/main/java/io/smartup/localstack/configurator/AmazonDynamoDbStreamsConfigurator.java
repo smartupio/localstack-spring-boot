@@ -12,7 +12,7 @@ public class AmazonDynamoDbStreamsConfigurator extends AbstractAmazonClientConfi
 
     @Override
     public String getEndpoint() {
-        return "http://" + getLocalStackHost() + ":4569";
+        return "http://" + getLocalStackHost() + ":4570";
     }
 
     @Override
