@@ -12,7 +12,7 @@ public class AmazonRoute53Configurator extends AbstractAmazonClientConfigurator<
 
     @Override
     public String getEndpoint() {
-        return "http://" + getLocalStackHost() + ":4580";
+        return getLocalStackHost(4580);
     }
 
     @Override
