@@ -12,7 +12,7 @@ public class SQSConnectionFactoryConfigurator extends AbstractAmazonClientConfig
 
     @Override
     public String getEndpoint() {
-        return "http://" + getLocalStackHost() + ":4576";
+        return getLocalStackHost(4576);
     }
 
     @Override

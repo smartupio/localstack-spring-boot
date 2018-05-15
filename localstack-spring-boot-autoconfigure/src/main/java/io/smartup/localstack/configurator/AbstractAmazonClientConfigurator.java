@@ -4,6 +4,7 @@ import com.amazonaws.regions.Region;
 import io.smartup.localstack.LocalStackHostProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -20,6 +21,10 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
     @Autowired
     private LocalStackHostProvider localStackHostProvider;
 
+
+    @Value("${localstack.use-ssl:false}")
+    private boolean useSsl;
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
@@ -35,8 +40,10 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
         this.applicationContext = applicationContext;
     }
 
-    protected final String getLocalStackHost(){
-        return localStackHostProvider.provideLocalStackHost();
+    protected final String getLocalStackHost(int port) {
+        String protocol = useSsl ? "https://" : "http://";
+
+        return protocol + localStackHostProvider.provideLocalStackHost() + ":" + port;
     }
 
     protected T getBean() {

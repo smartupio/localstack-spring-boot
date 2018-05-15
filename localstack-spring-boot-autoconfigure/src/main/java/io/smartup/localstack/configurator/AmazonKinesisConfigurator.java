@@ -12,7 +12,7 @@ public class AmazonKinesisConfigurator extends AbstractAmazonClientConfigurator<
 
     @Override
     public String getEndpoint() {
-        return "http://" + getLocalStackHost() + ":4568";
+        return getLocalStackHost(4568);
     }
 
     @Override
