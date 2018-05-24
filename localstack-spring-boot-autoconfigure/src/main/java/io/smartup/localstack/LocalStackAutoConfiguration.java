@@ -3,11 +3,13 @@ package io.smartup.localstack;
 import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBStreams;
+import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import io.smartup.localstack.configurator.AmazonDynamoDbConfigurator;
 import io.smartup.localstack.configurator.AmazonDynamoDbStreamsConfigurator;
+import io.smartup.localstack.configurator.AmazonKinesisConfigurator;
 import io.smartup.localstack.configurator.AmazonRoute53Configurator;
 import io.smartup.localstack.configurator.AmazonS3Configurator;
 import io.smartup.localstack.configurator.AmazonSESConfigurator;
@@ -99,6 +101,16 @@ public class LocalStackAutoConfiguration {
         @Bean
         public AmazonDynamoDbStreamsConfigurator amazonDynamoDbStreamsConfigurator() {
             return new AmazonDynamoDbStreamsConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "kinesis.enabled", havingValue = "true")
+    @ConditionalOnBean(AmazonKinesis.class)
+    public static class AmazonKinesisConfiguration {
+        @Bean
+        public AmazonKinesisConfigurator amazonKinesisConfigurator() {
+            return new AmazonKinesisConfigurator();
         }
     }
 

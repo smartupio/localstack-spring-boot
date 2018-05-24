@@ -2,17 +2,17 @@ package io.smartup.localstack.configurator;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.kinesis.AmazonKinesis;
 
-public class AmazonDynamoDbConfigurator extends AbstractAmazonClientConfigurator<AmazonDynamoDB> {
+public class AmazonKinesisConfigurator extends AbstractAmazonClientConfigurator<AmazonKinesis> {
     @Override
-    public Class<AmazonDynamoDB> getAmazonClientClass() {
-        return AmazonDynamoDB.class;
+    public Class<AmazonKinesis> getAmazonClientClass() {
+        return AmazonKinesis.class;
     }
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4569);
+        return getLocalStackHost(4568);
     }
 
     @Override
