@@ -44,7 +44,13 @@ You need to make sure that the profile you want to use LocalStack in includes th
         enabled: true
       redshift:
         enabled: true
+      ssm:
+        enabled: true
+      lambda:
+        enabled: true
 ```
+
+The AutoConfiguration now supports `SSL`, in order to use it set the `localstack.use-ssl` flag to `true`.
 
 The *localstack.enabled* config is mandatory, you must specify this.
 
