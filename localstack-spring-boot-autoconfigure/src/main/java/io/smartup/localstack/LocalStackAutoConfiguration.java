@@ -4,18 +4,12 @@ import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBStreams;
 import com.amazonaws.services.kinesis.AmazonKinesis;
+import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import io.smartup.localstack.configurator.AmazonDynamoDbConfigurator;
-import io.smartup.localstack.configurator.AmazonDynamoDbStreamsConfigurator;
-import io.smartup.localstack.configurator.AmazonKinesisConfigurator;
-import io.smartup.localstack.configurator.AmazonRoute53Configurator;
-import io.smartup.localstack.configurator.AmazonS3Configurator;
-import io.smartup.localstack.configurator.AmazonSESConfigurator;
-import io.smartup.localstack.configurator.AmazonSNSConfigurator;
-import io.smartup.localstack.configurator.AmazonSQSConfigurator;
-import io.smartup.localstack.configurator.SQSConnectionFactoryConfigurator;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import io.smartup.localstack.configurator.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -111,6 +105,26 @@ public class LocalStackAutoConfiguration {
         @Bean
         public AmazonKinesisConfigurator amazonKinesisConfigurator() {
             return new AmazonKinesisConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "ssm.enabled", havingValue = "true")
+    @ConditionalOnBean(AWSSimpleSystemsManagement.class)
+    public static class AmazonSSMConfiguration {
+        @Bean
+        public AmazonSSMConfigurator amazonSSMConfigurator() {
+            return new AmazonSSMConfigurator();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "localstack", name = "lambda.enabled", havingValue = "true")
+    @ConditionalOnBean(AWSLambda.class)
+    public static class AmazonLambdaConfiguration {
+        @Bean
+        public AmazonLambdaConfigurator amazonLambdaConfigurator() {
+            return new AmazonLambdaConfigurator();
         }
     }
 
