@@ -13,7 +13,7 @@ public class AmazonSSMConfigurator extends AbstractAmazonClientConfigurator<AWSS
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4583);
+        return getLocalStackHost();
     }
 
     @Override
