@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
     <servers>
-        <server>
+        <!--<server>
             <id>ossrh</id>
             <username>${env.OSSRH_JIRA_USERNAME}</username>
             <password>${env.OSSRH_JIRA_PASSWORD}</password>
+        </server>-->
+
+        <server>
+            <id>smartup-snapshot</id>
+            <username>deploy</username>
+            <password>${env.CI_DEPLOY_PASSWORD}</password>
         </server>
+        <server>
+            <id>smartup-release</id>
+            <username>deploy</username>
+            <password>${env.CI_DEPLOY_PASSWORD}</password>
+        </server>
+        <server>
+            <id>smartup-snapshot-local</id>
+            <username>deploy</username>
+            <password>${env.CI_DEPLOY_PASSWORD}</password>
+        </server>
+        <server>
+            <id>smartup-release-local</id>
+            <username>deploy</username>
+            <password>${env.CI_DEPLOY_PASSWORD}</password>
+        </server>
+
     </servers>
 
-    <profiles>
+    <!--<profiles>
         <profile>
             <id>ossrh</id>
             <activation>
@@ -20,5 +42,5 @@
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
             </properties>
         </profile>
-    </profiles>
+    </profiles>-->
 </settings>

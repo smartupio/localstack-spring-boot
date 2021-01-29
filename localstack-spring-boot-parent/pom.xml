@@ -6,21 +6,21 @@
 
     <groupId>io.smartup.localstack</groupId>
     <artifactId>localstack-spring-boot-parent</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Spring Boot Parent LocalStack</name>
     <description>Parent maven module for easy dependency management</description>
     <url>https://github.com/smartupio/localtack-spring-boot</url>
 
-    <developers>
-        <developer>
-            <id>matelang</id>
-            <name>Mate Lang</name>
-            <email>mate@smartup.io</email>
-            <url>https://www.smartup.io</url>
-        </developer>
-    </developers>
+<!--    <developers>-->
+<!--        <developer>-->
+<!--            <id>matelang</id>-->
+<!--            <name>Mate Lang</name>-->
+<!--            <email>mate@smartup.io</email>-->
+<!--            <url>https://www.smartup.io</url>-->
+<!--        </developer>-->
+<!--    </developers>-->
 
     <licenses>
         <license>
@@ -29,14 +29,25 @@
         </license>
     </licenses>
 
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
+
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>smartup-snapshot-local</id>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot-local</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>smartup-release-local</id>
+            <url>https://smartup.jfrog.io/smartup/libs-release-local</url>
         </repository>
     </distributionManagement>
 
@@ -97,6 +108,39 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </repository>
+        <repository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>smartup-release</id>
+            <name>libs-release</name>
+            <url>https://smartup.jfrog.io/smartup/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots/>
+            <id>smartup-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>https://smartup.jfrog.io/smartup/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <pluginManagement>
