@@ -16,7 +16,7 @@ public class AmazonSQSConfigurator extends AbstractAmazonClientConfigurator<Amaz
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4576);
+        return getLocalStackHost();
     }
 
     @Override

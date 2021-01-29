@@ -15,6 +15,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public abstract class AbstractAmazonClientConfigurator<T> implements ApplicationContextAware, BeanPostProcessor {
+
+    public static final int EDGE_PORT = 4566;
+
     private ApplicationContext applicationContext;
     protected boolean immutable;
 
@@ -40,10 +43,10 @@ public abstract class AbstractAmazonClientConfigurator<T> implements Application
         this.applicationContext = applicationContext;
     }
 
-    protected final String getLocalStackHost(int port) {
+    protected final String getLocalStackHost() {
         String protocol = useSsl ? "https://" : "http://";
 
-        return protocol + localStackHostProvider.provideLocalStackHost() + ":" + port;
+        return protocol + localStackHostProvider.provideLocalStackHost() + ":" + EDGE_PORT;
     }
 
     protected T getBean() {

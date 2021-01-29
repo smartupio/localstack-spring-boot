@@ -12,7 +12,7 @@ public class AmazonSESConfigurator extends AbstractAmazonClientConfigurator<Amaz
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4579);
+        return getLocalStackHost();
     }
 
     @Override
