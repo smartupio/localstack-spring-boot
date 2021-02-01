@@ -12,7 +12,7 @@ public class AmazonSNSConfigurator extends AbstractAmazonClientConfigurator<Amaz
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4575);
+        return getLocalStackHost();
     }
 
     @Override

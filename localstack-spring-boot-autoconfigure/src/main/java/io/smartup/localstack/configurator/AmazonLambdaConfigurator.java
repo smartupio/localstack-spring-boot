@@ -12,7 +12,7 @@ public class AmazonLambdaConfigurator extends AbstractAmazonClientConfigurator<A
 
     @Override
     public String getEndpoint() {
-        return getLocalStackHost(4574);
+        return getLocalStackHost();
     }
 
     @Override
